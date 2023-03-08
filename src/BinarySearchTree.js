@@ -32,8 +32,23 @@ class BinarySearchTree {
     }
   }
 
-  find() {
+  find(key) {
     // your solution here
+    if (this.key == key) {
+      return this.value;
+    }
+    // it key is less than the root, follow the left child
+    // if there is an existing left child, recursively check left and/or right until you find the item
+    else if (key < this.key && this.left) {
+      return this.left.find(key);
+    }
+    // if key is greater than the root, follow the right child
+    else if (key > this.key && this.right) {
+      return this.right.find(key);
+    } // tree has been searched
+    else {
+      throw Error("Node(key) is not found in the BST");
+    }
   }
 
   remove() {
