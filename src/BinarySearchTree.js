@@ -33,7 +33,6 @@ class BinarySearchTree {
   }
 
   find(key) {
-    // your solution here
     if (this.key == key) {
       return this.value;
     }
@@ -51,8 +50,70 @@ class BinarySearchTree {
     }
   }
 
-  remove() {
-    // your solution here
+  remove(key) {
+    // check if the root key matches key
+    if (this.key == key) {
+      // check if left and right exist
+      if (this.left && this.right) {
+        // _findMin() finds min value from the right subtree
+        // when removing a node from the tree that has two children, replace the node with the smallest node from the right subtree
+        const successor = this.right._findMin();
+        this.key = successor.key;
+        this.value = successor.value;
+        successor.remove(successor.key);
+      } //if node only has a left child, replace the node with its left child
+      else if (this.left) {
+        this._replaceWith(this.left);
+      } //if node only has a right child, replace the node with its right child
+      else if (this.right) {
+        this._replaceWith(this.right);
+        // if the node has no children remove all referrences to it
+      } else {
+        this._replaceWith(null);
+      }
+      // key is less than and left exists
+    } else if (key < this.key && this.left) {
+      this.left.remove(key);
+      // key is more than and right exists
+    } else if (key > this.key && this.right) {
+      this.right.remove(key);
+    } else {
+      // if key/node not found throw an Error with a string
+      throw Error("Node/key not found");
+    }
+  }
+
+  _findMin() {
+    if (!this.left) {
+      return this;
+    }
+    return this.left._findMin();
+  }
+
+  // used to find the node you want to use to replace a ndoe that has children
+  _replaceWith(node) {
+    if (this.parent) {
+      if (this == this.parent.left) {
+        this.parent.left = node;
+      } else if (this == this.parent.right) {
+        this.parent.right = node;
+      }
+      if (node) {
+        node.parent = this.parent;
+      }
+    } else {
+      if (node) {
+        this.key = node.key;
+        this.value = node.value;
+        this.left = node.left;
+        this.right = node.right;
+      } else {
+        this.key = null;
+        this.value = null;
+        this.left = null;
+        this.right = null;
+      }
+    }
   }
 }
 
